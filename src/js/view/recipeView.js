@@ -4,6 +4,9 @@ console.log(Fraction);
 class RecipeView {
   #parentElement = document.querySelector('.recipe');
   #data;
+  #errorMessage = 'We couldn not find that recipe. please try another one!';
+  #message = '';
+
   render(data) {
     this.#data = data;
     const markup = this.#generateMarkup();
@@ -15,7 +18,7 @@ class RecipeView {
     this.#parentElement.innerHTML = '';
   }
 
-  renderSpinner = function () {
+  renderSpinner() {
     const markup = `
         <div class="spinner">
             <svg>
@@ -23,11 +26,42 @@ class RecipeView {
             </svg>
         </div>
     `;
-    // Clear existing content in the parent element
-    this.#parentElement.innerHTML = '';
-    // Insert the spinner markup at the beginning of the parent element
+    this.#clear();
     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  };
+  }
+
+  renderError(message = this.#message) {
+    const markup = `
+    <div class="error">
+        <div>
+          <svg>
+            <use href="${icons}#icon-alert-triangle"></use>
+          </svg>
+          </div>
+        <p>${message}!</p>
+    </div>;`;
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  renderMessage(message = this.#errorMessage) {
+    const markup = `
+    <div class="message">
+        <div>
+          <svg>
+            <use href="${icons}#icon-smile"></use>
+          </svg>
+          </div>
+        <p>${message}!</p>
+    </div>;`;
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  addHandlerRender(handler) {
+    const array1 = ['hashchange', 'load'];
+    array1.forEach(ev => window.addEventListener(ev, handler));
+  }
 
   #generateMarkup() {
     return `
